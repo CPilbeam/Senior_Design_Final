@@ -101,7 +101,7 @@ void clean_avg_data(float dist[], float ang[], float qual[], int i) { // functio
                 zQualCount++;
             }
         }
-        if (zQualCount <= zero_parameter) { // if there are 4 or less consecutive 0 quality points we want to cleanem up. 
+        if (zQualCount <= zero_parameter) { // if there are 'zero_parameter' or less consecutive '0 quality' points we want to cleanem up. 
             for (int n = 0; n < zQualCount; n++) {
                 if (i != 0) {
                     dist[i + n] = dist[i - 1];
@@ -117,10 +117,9 @@ void clean_avg_data(float dist[], float ang[], float qual[], int i) { // functio
     
     // If good quality but bad distance (anomaly points - unsure why they exist)
     if (dist[i] == 0) {
-        //printf("Dist at %f = 0 ", ang[i]);
         for (int j = 0; j < 6; j++) {
             if (dist[i + j] == 0) {
-                zDistCount++;
+                zDistCount++; //increment how many of these exist
             }
             else {
                 set_dist_to = dist[i + j];
@@ -164,12 +163,12 @@ void clean_raw_data(float dist[][20], float qual[][20], int row) { // function t
             if (qual[row][i] == 0) {
                 dist[row][i] = modelDist; // set bad points' distance to a good scan for that point
                 qual[row][i] = modelQual; // ^ quality
-                //printf("clean raw Dist: %f clean raw Qual: %f \n", dist[row][i], qual[row][i]);
+                
             }
         }
 
     }
-    //printf("numBadqual: %d \n", numBadQual);
+    
     
 }
 
@@ -184,7 +183,7 @@ bool is_path(float dist[], float threshold, int i) { // determines if a point is
 
 bool is_no_return(float dist[], float qual[], int i) {
 
-    // shouldnt be needed anymore
+    // shouldnt be needed further
     if ((dist[i] == 0) /*& (qual[i] == 0)*/) {
         return true;
     }
@@ -193,9 +192,6 @@ bool is_no_return(float dist[], float qual[], int i) {
     }
 }
 
-//------------POTENTIALLY SKETCH----------------//
-
-//----------END POTENTIALLY SKETCH--------------//
 float find_gap_width(float dist[], float ang[], int nStart, int nEnd) { // find size of gap (mainly for use indoors - may utilize outside)
     float dTheta = 0.0;
     if (nStart > nEnd) {
@@ -204,10 +200,9 @@ float find_gap_width(float dist[], float ang[], int nStart, int nEnd) { // find 
     else {
         dTheta = abs(ang[nStart] - ang[nEnd]);
     }
-    //printf("nStart: %d nEnd: %d \n", nStart, nEnd);
-    //printf("dTheta: %f dist[nStart]: %f dist[nEnd]: %f \n", dTheta, dist[nStart], dist[nEnd]);
+    
     float gapSize = sqrt(((dist[nStart] * dist[nStart]) + (dist[nEnd] * dist[nEnd]) - (2.0 * dist[nStart] * dist[nEnd] * cos( dTheta * 3.14159265 / 180.0))));
-    //printf("Gap Width: %f \n", gapSize);
+ 
   
     return gapSize;
 }
@@ -297,9 +292,9 @@ int main(int argc, const char* argv[]) {
 
     bool pathValid = false;
 
-    float ten = 10.0; // beacause like i have to or something idk Im not a programer
+    float ten = 10.0; // Data type thing I'm really not sure
 
-    int a = 0;
+    int a = 0; //poorly named runtime parameters
     int b = 0;
     int c = 0;
     int d = 0;
@@ -605,23 +600,8 @@ int main(int argc, const char* argv[]) {
 
             } // end for each point in count nodes
             
-            /*
-            for (int i = 0; i < edgeRow; i++) {
-                if (edgeRow >= 1) {
-                    //printf("edgeRowHERE: %d \n", edgeRow);
-                    if (edgeArr[edgeRow - 1][1] == edgeArr[0][1]) {
-                        for (int i = 0; i < edgeRow; i++) {
-                            edgeArr[i][0] = edgeArr[i + 1][0];
-                            edgeArr[i][1] = edgeArr[i + 1][1];
-                        }
-                    }
-                }
-            }
-            */
-            /*if ((edgeArr[0][0] != edgeArr[edgeRow][0]) && (edgeArr[0][1] == edgeArr[edgeRow][1])) {
-                edgeArr[0][0] = edgeArr[edgeRow][0];
-                edgeArr[0][1] = edgeArr[edgeRow][1];
-            }*/
+           
+         
 
             for (int i = 0; i < edgeRow; i++) {
 
